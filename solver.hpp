@@ -7,46 +7,51 @@ using namespace std;
 
 
 namespace solver{
-
+    
     class RealVariable{
-
+        public:
         float _value;
 
-       
+        
     };
 
     class ComplexVariable{
-
+        public:
          complex<double>_value;
         
         
     };
 
     class RealUnit{
+        public:
+        RealUnit(){};
+        RealUnit(RealVariable var, float co, int ex){
+            _variable=var;
+            _coeff=co;
+            _exponent=ex;
+        }       
+        public:
         RealVariable _variable;
-        float _coefficient;
+        double _coeff;
         int _exponent;
 
-        //friend RealUnit& operator^(RealVariable x, int y);
 
-        //friend RealVariable& operator+(RealUnit x, RealUnit y);
-
-        //friend RealVariable& operator-(RealUnit x, RealUnit y);
-
-        //friend RealVariable& operator-(RealVariable x);
-
-        //friend RealVariable& operator+(RealVariable x);
-
-        //friend RealUnit& operator*(int x, RealVariable y);
-
-        //friend RealUnit& operator*(int x, RealVariable& y);
-
-        //friend RealUnit& operator*(int x, RealUnit y);
+        
+        
     };
 
     class ComplexUnit{
-        ComplexVariable _x;
-        int _power;
+        public:
+        ComplexUnit(){}
+        ComplexUnit(ComplexVariable var, complex<double> co, int ex){
+            _variable=var;
+            _coeff=co;
+            _exponent=ex;
+        }
+        public:
+        ComplexVariable _variable;
+        int _exponent;
+        complex<double> _coeff;
 
         //friend ComplexUnit& operator^(ComplexVariable x, int y);
 
@@ -61,31 +66,52 @@ namespace solver{
 
 
     class RealVec{
-
+        public:
+        RealVec(){
+            _equation=false;
+        };
+        RealVec(vector<RealUnit> units, bool equation){
+            _units=units;
+            _equation=equation;
+        }
+        public:
         vector<RealUnit>_units;
         bool _equation;
         
-        //friend RealVec& operator+(RealVec x, RealVec y);
-
-        //friend RealVec& operator-(RealVec x, RealVec y);
-
-        
-
-        //friend RealVec& operator==(RealVec x, RealVec y);
-        
-        
+        public:
+        double quadratic(); //quardratic equations
+        int equation(); 
+        double linear();
         /*
-        vector<string> out;
-	
-		out.push_back(str.substr(start, end - start));
-	
-        */ 
+        case 1: if no variable: return 0
+        case 2: if linear: return 1
+        case 3: if quardratic: return 2
+        */
+        
+        friend RealVec varToRVec(RealVariable x);
+        friend RealVec doubleToRVec(double x);
+        friend RealVec unitToRVec(RealUnit x);
+
     };
 
     class ComplexVec{
+        public:
 
+        ComplexVec(){
+            _equation=false;
+        }
+        ComplexVec(vector<ComplexUnit>units, bool equation){
+            _units=units;
+            _equation=equation;
+        }
+        public:
         vector<ComplexUnit>_units;
         bool _equation;
+
+        public:
+        complex<double> quadratic(); //quardratic equations
+        int equation(); 
+        complex<double> linear();
         
         //friend ComplexVec& operator+(ComplexVec x, ComplexVec y);
 
@@ -93,30 +119,63 @@ namespace solver{
 
         //friend ComplexVec& operator==(ComplexVec x, ComplexVec y);
 
+        friend ComplexVec varToCVec(ComplexVariable x);
+        friend ComplexVec doubleToCVec(complex<double> x);
+        friend ComplexVec unitToCVec(ComplexUnit x);
+
     };
 
    
 
 
-        double solve(ComplexVec c);
+        complex<double> solve(ComplexVec c);
         double solve(RealVec r);
+         
+        RealVec operator+(RealVariable x);
+        
+        RealVec operator+(RealVec x, RealVec y);
+
+        RealVec operator+(RealUnit x, RealUnit y);
+
+        RealVec operator-(RealVec x, RealVec y);
+
+        //RealVec& operator-(RealUnit x, int y);
+
+        RealVec operator-(RealUnit x, double y);
+
+        RealVec operator-(double x, RealUnit y);
+
+        RealVec operator+(RealUnit x, double y);
+        
+        RealVec operator+(double x, RealUnit y);
+
+        RealVec operator+(RealVec x, double y);
+
+        RealVec operator+(double x, RealVec y);
+
+        RealVec operator==(RealUnit x, double y);
+
+        RealVec operator==(RealVec x, RealVec y);
+
+        RealVec operator==(RealVec x, double y);
+        
+        
+        RealUnit operator^(RealVariable x, int y);
         
         //RealUnit& operator*(int x, RealVariable y);
-        RealUnit& operator^(RealVariable x, int y);
+        
 
         //friend RealVariable& operator+(RealUnit x, RealUnit y);
 
         //friend RealVariable& operator-(RealUnit x, RealUnit y);
 
-        RealUnit& operator-(RealVariable x);
+        RealVec operator-(RealVariable x);
 
-        RealVec& operator-(RealVec x, RealVariable y);
+        RealVec operator-(RealVec x, RealVariable y);
 
-        RealVariable& operator+(RealVariable x);
+        RealUnit operator*(double x, RealVariable y);
 
-        RealUnit& operator*(int x, RealVariable y);
-
-        RealUnit& operator*(int x, RealUnit y);
+        RealUnit operator*(double x, RealUnit y);
 
         //RealUnit& operator*(int x, RealVariable& y);
 
@@ -124,92 +183,88 @@ namespace solver{
 
         //RealUnit& operator*(int x, RealUnit& y);
 
-        ComplexUnit& operator^(ComplexVariable x, int y);
+        ComplexUnit operator^(ComplexVariable x,int y);
 
-        RealVariable& operator-(RealUnit x, RealUnit y);
+        RealVec operator-(RealUnit x, RealUnit y);
 
         //RealVariable& operator-(RealUnit x, int y);
 
-        ComplexVariable& operator-(ComplexVariable x);
+        //ComplexVariable& operator-(ComplexVariable x);
 
-        ComplexVariable& operator+(ComplexVariable x);
+        ComplexUnit operator+(ComplexVariable x);
 
-        RealVec& operator+(RealVec x, RealVec y);
+        ComplexVec operator+(ComplexVec x, ComplexVec y);
 
-        RealVec& operator+(RealUnit x, RealUnit y);
+        ComplexVec operator-(ComplexVec x, ComplexVec y);
 
-        RealVec& operator-(RealVec x, RealVec y);
+        ComplexVec operator==(ComplexVec x, ComplexVec y);
 
-        RealVec& operator-(RealUnit x, int y);
+        RealUnit operator/(RealVariable x, double y);
 
-        RealVec& operator-(RealUnit x, double y);
+        RealUnit operator*(double x, RealUnit y);
 
-        RealVec& operator-(double x, RealUnit y);
-
-        RealVec& operator+(RealUnit x, double y);
-
-        RealVec& operator+(double x, RealUnit y);
-
-        RealVec& operator+(RealVec x, double y);
-
-        RealVec& operator+(double x, RealVec y);
-
-        RealVec& operator==(RealUnit x, int y);
-
-        RealVec& operator==(RealVec x, RealVec y);
-
-        RealVec& operator==(RealVec x, int y);
-
-        ComplexVec& operator+(ComplexVec x, ComplexVec y);
-
-        ComplexVec& operator-(ComplexVec x, ComplexVec y);
-
-        ComplexVec& operator==(ComplexVec x, ComplexVec y);
-
-        RealUnit& operator/(RealVariable x, int y);
-
-        RealUnit& operator*(double x, RealUnit y);
-
-        RealUnit& operator*(double x, RealVariable y);
+        RealUnit operator*(double x, RealVariable y);
         
-        ComplexUnit& operator*(int x, ComplexVariable y);
+        ComplexUnit operator*(complex<double> x, ComplexVariable y);
 
-        ComplexVec& operator-(ComplexUnit x, int y);
+        ComplexVec operator-(ComplexUnit x, complex<double> y);
 
-        ComplexVec& operator==(ComplexVec x, int y);
+        ComplexVec operator==(ComplexVec x, complex<double> y);
 
-        RealUnit& operator/(RealUnit x, int y);
+        RealUnit operator/(RealUnit x, double y);
 
-        ComplexVec& operator==(ComplexUnit x, int y);
+        ComplexVec operator==(ComplexUnit x, complex<double> y);
 
-        ComplexVec& operator+(ComplexUnit x, ComplexUnit y);
+        ComplexVec operator+(ComplexUnit x, ComplexUnit y);
 
-        ComplexVec& operator+(ComplexVec x, int y);
+        ComplexVec operator+(ComplexVec x, complex<double> y);
 
-        ComplexVec& operator+(ComplexUnit x, int y);
+        ComplexVec operator+(ComplexUnit x, complex<double> y);
 
-        ComplexVec& operator+(int x, ComplexVec y);
+        ComplexVec operator+(complex<double> x, ComplexVec y);
 
-        ComplexVec& operator+(int x, ComplexUnit y);
+        ComplexVec operator+(complex<double> x, ComplexUnit y);
 
-        ComplexVec& operator+(ComplexVariable x, ComplexVec y);
+        ComplexVec operator+(ComplexVariable x, ComplexVec y);
 
-        ComplexVec& operator+(ComplexVariable x, ComplexUnit y);
+        ComplexVec operator+(ComplexVariable x, ComplexUnit y);
 
-        ComplexVec& operator+(ComplexVariable x, complex <double>y);
+        ComplexVec operator+(ComplexVariable x, complex <double>y);
 
-        ComplexVec& operator+(ComplexVariable x, complex <double>y);
+        ComplexVec operator+(ComplexVariable x, complex <double>y);
 
-        ComplexUnit& operator*(int x, ComplexVariable y);
+        ComplexUnit operator*(complex<double> x, ComplexVariable y);
 
-        ComplexVec& operator+(ComplexUnit x, complex<double>y);
+        ComplexVec operator+(ComplexUnit x, complex<double>y);
 
-        ComplexUnit& operator/(ComplexUnit x, int y);
+        ComplexUnit operator/(ComplexUnit x, complex<double> y);
 
-        ComplexVec& operator-(ComplexVec x, ComplexVariable y);
+        ComplexVec operator-(ComplexVec x, ComplexVariable y);
 
-        RealUnit& operator*(int x, RealUnit& y);
+        RealUnit operator*(double x, RealUnit& y);
 
-       
+        ComplexVec operator-(ComplexVariable x);
+
+        ComplexVec operator-(ComplexVec x, complex<double>y);
+
+        //ComplexVec operator-(complex<double>x);
+
+        //RealUnit& operator-(RealVariable x);
+         
+/*
+        ComplexUnit& operator+(double x);
+
+        ComplexUnit& operator+(int x);
+
+        ComplexUnit& operator-(double x);
+
+        RealUnit& operator+(int x);
+
+        RealUnit& operator+(double x);
+
+        RealUnit& operator-(int x);
+
+        RealUnit& operator-(double x);
+        */
 
 };
